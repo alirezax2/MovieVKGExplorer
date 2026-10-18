@@ -1,0 +1,888 @@
+{
+  "database_name": "movies_db",
+  "inspected_schemas": [
+    "public"
+  ],
+  "schemas": {
+    "public": {
+      "tables": {
+        "metadata_registry": {
+          "columns": [
+            {
+              "name": "metaid",
+              "type": "VARCHAR(64)",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": true
+            },
+            {
+              "name": "entity_type",
+              "type": "VARCHAR(32)",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "created_at",
+              "type": "TIMESTAMP",
+              "nullable": false,
+              "default": "CURRENT_TIMESTAMP",
+              "is_primary_key": false
+            }
+          ],
+          "primary_key": [
+            "metaid"
+          ],
+          "foreign_keys": [],
+          "unique_constraints": [],
+          "indexes": [],
+          "row_count": 68,
+          "mapping_eligibility": "eligible",
+          "warnings": []
+        },
+        "definition": {
+          "columns": [
+            {
+              "name": "definition_id",
+              "type": "BIGINT",
+              "nullable": false,
+              "default": "nextval('\"public\".definition_definition_id_seq'::regclass)",
+              "is_primary_key": true
+            },
+            {
+              "name": "metaid",
+              "type": "VARCHAR(64)",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "name",
+              "type": "VARCHAR(128)",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "entity_type",
+              "type": "VARCHAR(32)",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "description",
+              "type": "TEXT",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "data_type",
+              "type": "VARCHAR(64)",
+              "nullable": false,
+              "default": "'entity'::character varying",
+              "is_primary_key": false
+            },
+            {
+              "name": "namespace",
+              "type": "VARCHAR(64)",
+              "nullable": false,
+              "default": "'movies.taxonomy'::character varying",
+              "is_primary_key": false
+            },
+            {
+              "name": "version",
+              "type": "VARCHAR(16)",
+              "nullable": false,
+              "default": "'1.0.0'::character varying",
+              "is_primary_key": false
+            },
+            {
+              "name": "created_at",
+              "type": "TIMESTAMP",
+              "nullable": false,
+              "default": "CURRENT_TIMESTAMP",
+              "is_primary_key": false
+            },
+            {
+              "name": "updated_at",
+              "type": "TIMESTAMP",
+              "nullable": false,
+              "default": "CURRENT_TIMESTAMP",
+              "is_primary_key": false
+            }
+          ],
+          "primary_key": [
+            "definition_id"
+          ],
+          "foreign_keys": [
+            {
+              "name": "fk_definition_metaid",
+              "constrained_columns": [
+                "metaid"
+              ],
+              "referred_schema": "public",
+              "referred_table": "metadata_registry",
+              "referred_columns": [
+                "metaid"
+              ]
+            }
+          ],
+          "unique_constraints": [
+            {
+              "name": "uq_definition_metaid",
+              "column_names": [
+                "metaid"
+              ]
+            },
+            {
+              "name": "uq_definition_metaid_ns_ver",
+              "column_names": [
+                "metaid",
+                "namespace",
+                "version"
+              ]
+            }
+          ],
+          "indexes": [
+            "idx_definition_entity_type",
+            "idx_definition_metaid",
+            "idx_definition_namespace",
+            "uq_definition_metaid",
+            "uq_definition_metaid_ns_ver"
+          ],
+          "row_count": 68,
+          "mapping_eligibility": "eligible",
+          "warnings": []
+        },
+        "class": {
+          "columns": [
+            {
+              "name": "metaid",
+              "type": "VARCHAR(64)",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": true
+            },
+            {
+              "name": "name",
+              "type": "VARCHAR(64)",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "description",
+              "type": "TEXT",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "created_at",
+              "type": "TIMESTAMP",
+              "nullable": false,
+              "default": "CURRENT_TIMESTAMP",
+              "is_primary_key": false
+            }
+          ],
+          "primary_key": [
+            "metaid"
+          ],
+          "foreign_keys": [
+            {
+              "name": "fk_class_metaid",
+              "constrained_columns": [
+                "metaid"
+              ],
+              "referred_schema": "public",
+              "referred_table": "metadata_registry",
+              "referred_columns": [
+                "metaid"
+              ]
+            }
+          ],
+          "unique_constraints": [
+            {
+              "name": "uq_class_name",
+              "column_names": [
+                "name"
+              ]
+            }
+          ],
+          "indexes": [
+            "uq_class_name"
+          ],
+          "row_count": 14,
+          "mapping_eligibility": "eligible",
+          "warnings": []
+        },
+        "subclass": {
+          "columns": [
+            {
+              "name": "metaid",
+              "type": "VARCHAR(64)",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": true
+            },
+            {
+              "name": "class_metaid",
+              "type": "VARCHAR(64)",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "name",
+              "type": "VARCHAR(64)",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "description",
+              "type": "TEXT",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "created_at",
+              "type": "TIMESTAMP",
+              "nullable": false,
+              "default": "CURRENT_TIMESTAMP",
+              "is_primary_key": false
+            }
+          ],
+          "primary_key": [
+            "metaid"
+          ],
+          "foreign_keys": [
+            {
+              "name": "fk_subclass_class_metaid",
+              "constrained_columns": [
+                "class_metaid"
+              ],
+              "referred_schema": "public",
+              "referred_table": "class",
+              "referred_columns": [
+                "metaid"
+              ]
+            },
+            {
+              "name": "fk_subclass_metaid",
+              "constrained_columns": [
+                "metaid"
+              ],
+              "referred_schema": "public",
+              "referred_table": "metadata_registry",
+              "referred_columns": [
+                "metaid"
+              ]
+            }
+          ],
+          "unique_constraints": [
+            {
+              "name": "uq_subclass_class_metaid",
+              "column_names": [
+                "class_metaid",
+                "metaid"
+              ]
+            },
+            {
+              "name": "uq_subclass_class_name",
+              "column_names": [
+                "class_metaid",
+                "name"
+              ]
+            }
+          ],
+          "indexes": [
+            "idx_subclass_class_metaid",
+            "uq_subclass_class_metaid",
+            "uq_subclass_class_name"
+          ],
+          "row_count": 50,
+          "mapping_eligibility": "eligible",
+          "warnings": []
+        },
+        "relation_class_subclass": {
+          "columns": [
+            {
+              "name": "relation_id",
+              "type": "BIGINT",
+              "nullable": false,
+              "default": "nextval('\"public\".relation_class_subclass_relation_id_seq'::regclass)",
+              "is_primary_key": true
+            },
+            {
+              "name": "class_metaid",
+              "type": "VARCHAR(64)",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "subclass_metaid",
+              "type": "VARCHAR(64)",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "relation_type",
+              "type": "VARCHAR(64)",
+              "nullable": false,
+              "default": "'thematic_specialization'::character varying",
+              "is_primary_key": false
+            },
+            {
+              "name": "description",
+              "type": "TEXT",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "created_at",
+              "type": "TIMESTAMP",
+              "nullable": false,
+              "default": "CURRENT_TIMESTAMP",
+              "is_primary_key": false
+            }
+          ],
+          "primary_key": [
+            "relation_id"
+          ],
+          "foreign_keys": [
+            {
+              "name": "fk_rel_class",
+              "constrained_columns": [
+                "class_metaid"
+              ],
+              "referred_schema": "public",
+              "referred_table": "class",
+              "referred_columns": [
+                "metaid"
+              ]
+            },
+            {
+              "name": "fk_rel_class_subclass_composite",
+              "constrained_columns": [
+                "class_metaid",
+                "subclass_metaid"
+              ],
+              "referred_schema": "public",
+              "referred_table": "subclass",
+              "referred_columns": [
+                "class_metaid",
+                "metaid"
+              ]
+            },
+            {
+              "name": "fk_rel_subclass",
+              "constrained_columns": [
+                "subclass_metaid"
+              ],
+              "referred_schema": "public",
+              "referred_table": "subclass",
+              "referred_columns": [
+                "metaid"
+              ]
+            }
+          ],
+          "unique_constraints": [
+            {
+              "name": "uq_relation_class_subclass",
+              "column_names": [
+                "class_metaid",
+                "subclass_metaid"
+              ]
+            }
+          ],
+          "indexes": [
+            "idx_rel_class_subclass_class",
+            "idx_rel_class_subclass_subclass",
+            "uq_relation_class_subclass"
+          ],
+          "row_count": 50,
+          "mapping_eligibility": "eligible",
+          "warnings": []
+        },
+        "object": {
+          "columns": [
+            {
+              "name": "object_id",
+              "type": "BIGINT",
+              "nullable": false,
+              "default": "nextval('\"public\".object_object_id_seq'::regclass)",
+              "is_primary_key": true
+            },
+            {
+              "name": "title",
+              "type": "VARCHAR(255)",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "release_year",
+              "type": "INTEGER",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "director",
+              "type": "VARCHAR(255)",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "description",
+              "type": "TEXT",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "class",
+              "type": "VARCHAR(64)",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "subclass",
+              "type": "VARCHAR(64)",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "metaid",
+              "type": "VARCHAR(64)",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "runtime_minutes",
+              "type": "INTEGER",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "rating",
+              "type": "NUMERIC(3, 1)",
+              "nullable": false,
+              "default": null,
+              "is_primary_key": false
+            },
+            {
+              "name": "original_language",
+              "type": "VARCHAR(10)",
+              "nullable": false,
+              "default": "'en'::character varying",
+              "is_primary_key": false
+            },
+            {
+              "name": "created_at",
+              "type": "TIMESTAMP",
+              "nullable": false,
+              "default": "CURRENT_TIMESTAMP",
+              "is_primary_key": false
+            },
+            {
+              "name": "updated_at",
+              "type": "TIMESTAMP",
+              "nullable": false,
+              "default": "CURRENT_TIMESTAMP",
+              "is_primary_key": false
+            }
+          ],
+          "primary_key": [
+            "object_id"
+          ],
+          "foreign_keys": [
+            {
+              "name": "fk_object_class",
+              "constrained_columns": [
+                "class"
+              ],
+              "referred_schema": "public",
+              "referred_table": "class",
+              "referred_columns": [
+                "metaid"
+              ]
+            },
+            {
+              "name": "fk_object_class_subclass",
+              "constrained_columns": [
+                "class",
+                "subclass"
+              ],
+              "referred_schema": "public",
+              "referred_table": "subclass",
+              "referred_columns": [
+                "class_metaid",
+                "metaid"
+              ]
+            },
+            {
+              "name": "fk_object_metaid",
+              "constrained_columns": [
+                "metaid"
+              ],
+              "referred_schema": "public",
+              "referred_table": "metadata_registry",
+              "referred_columns": [
+                "metaid"
+              ]
+            }
+          ],
+          "unique_constraints": [
+            {
+              "name": "uq_object_title_year",
+              "column_names": [
+                "title",
+                "release_year"
+              ]
+            }
+          ],
+          "indexes": [
+            "idx_object_class",
+            "idx_object_class_subclass",
+            "idx_object_director",
+            "idx_object_metaid",
+            "idx_object_rating",
+            "idx_object_release_year",
+            "idx_object_subclass",
+            "idx_object_title",
+            "uq_object_title_year"
+          ],
+          "row_count": 1000,
+          "mapping_eligibility": "eligible",
+          "warnings": []
+        }
+      },
+      "views": {
+        "v_movie_catalog": {
+          "columns": [
+            {
+              "name": "object_id",
+              "type": "BIGINT",
+              "nullable": true
+            },
+            {
+              "name": "title",
+              "type": "VARCHAR(255)",
+              "nullable": true
+            },
+            {
+              "name": "release_year",
+              "type": "INTEGER",
+              "nullable": true
+            },
+            {
+              "name": "director",
+              "type": "VARCHAR(255)",
+              "nullable": true
+            },
+            {
+              "name": "class_name",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "subclass_name",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "metaid",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "definition_name",
+              "type": "VARCHAR(128)",
+              "nullable": true
+            },
+            {
+              "name": "definition_description",
+              "type": "TEXT",
+              "nullable": true
+            },
+            {
+              "name": "rating",
+              "type": "NUMERIC(3, 1)",
+              "nullable": true
+            },
+            {
+              "name": "runtime_minutes",
+              "type": "INTEGER",
+              "nullable": true
+            },
+            {
+              "name": "original_language",
+              "type": "VARCHAR(10)",
+              "nullable": true
+            },
+            {
+              "name": "created_at",
+              "type": "TIMESTAMP",
+              "nullable": true
+            }
+          ],
+          "row_count": 1000,
+          "mapping_eligibility": "view_read_only"
+        },
+        "v_movie_counts_by_class": {
+          "columns": [
+            {
+              "name": "class_metaid",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "class_name",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "movie_count",
+              "type": "BIGINT",
+              "nullable": true
+            },
+            {
+              "name": "avg_rating",
+              "type": "NUMERIC",
+              "nullable": true
+            },
+            {
+              "name": "min_rating",
+              "type": "NUMERIC",
+              "nullable": true
+            },
+            {
+              "name": "max_rating",
+              "type": "NUMERIC",
+              "nullable": true
+            },
+            {
+              "name": "avg_runtime_minutes",
+              "type": "NUMERIC",
+              "nullable": true
+            }
+          ],
+          "row_count": 14,
+          "mapping_eligibility": "view_read_only"
+        },
+        "v_movie_counts_by_subclass": {
+          "columns": [
+            {
+              "name": "class_metaid",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "class_name",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "subclass_metaid",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "subclass_name",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "movie_count",
+              "type": "BIGINT",
+              "nullable": true
+            },
+            {
+              "name": "avg_rating",
+              "type": "NUMERIC",
+              "nullable": true
+            },
+            {
+              "name": "avg_runtime_minutes",
+              "type": "NUMERIC",
+              "nullable": true
+            }
+          ],
+          "row_count": 50,
+          "mapping_eligibility": "view_read_only"
+        },
+        "v_movie_metadata": {
+          "columns": [
+            {
+              "name": "object_id",
+              "type": "BIGINT",
+              "nullable": true
+            },
+            {
+              "name": "title",
+              "type": "VARCHAR(255)",
+              "nullable": true
+            },
+            {
+              "name": "release_year",
+              "type": "INTEGER",
+              "nullable": true
+            },
+            {
+              "name": "director",
+              "type": "VARCHAR(255)",
+              "nullable": true
+            },
+            {
+              "name": "rating",
+              "type": "NUMERIC(3, 1)",
+              "nullable": true
+            },
+            {
+              "name": "object_metaid",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "object_type_name",
+              "type": "VARCHAR(128)",
+              "nullable": true
+            },
+            {
+              "name": "object_type_description",
+              "type": "TEXT",
+              "nullable": true
+            },
+            {
+              "name": "class_metaid",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "class_name",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "class_description",
+              "type": "TEXT",
+              "nullable": true
+            },
+            {
+              "name": "subclass_metaid",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "subclass_name",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "subclass_description",
+              "type": "TEXT",
+              "nullable": true
+            },
+            {
+              "name": "metadata_namespace",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "metadata_version",
+              "type": "VARCHAR(16)",
+              "nullable": true
+            }
+          ],
+          "row_count": 1000,
+          "mapping_eligibility": "view_read_only"
+        },
+        "v_class_subclass_relations": {
+          "columns": [
+            {
+              "name": "relation_id",
+              "type": "BIGINT",
+              "nullable": true
+            },
+            {
+              "name": "class_metaid",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "class_name",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "subclass_metaid",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "subclass_name",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "relation_type",
+              "type": "VARCHAR(64)",
+              "nullable": true
+            },
+            {
+              "name": "relationship_description",
+              "type": "TEXT",
+              "nullable": true
+            },
+            {
+              "name": "movie_count",
+              "type": "BIGINT",
+              "nullable": true
+            },
+            {
+              "name": "avg_rating",
+              "type": "NUMERIC",
+              "nullable": true
+            }
+          ],
+          "row_count": 50,
+          "mapping_eligibility": "view_read_only"
+        }
+      }
+    }
+  },
+  "mapping_summary": {
+    "total_tables": 6,
+    "total_views": 5,
+    "eligible_tables": [
+      "public.metadata_registry",
+      "public.definition",
+      "public.class",
+      "public.subclass",
+      "public.relation_class_subclass",
+      "public.object"
+    ],
+    "tables_requiring_review": [],
+    "views": [
+      "public.v_movie_catalog",
+      "public.v_movie_counts_by_class",
+      "public.v_movie_counts_by_subclass",
+      "public.v_movie_metadata",
+      "public.v_class_subclass_relations"
+    ],
+    "warnings": []
+  }
+}

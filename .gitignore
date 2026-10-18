@@ -1,0 +1,43 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+*.egg
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Environment and secrets
+.env
+.env.local
+*.secret
+*.pem
+*.key
+
+# Testing and Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# Linters and IDE
+.ruff_cache/
+.mypy_cache/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node / Bun frontend
+node_modules/
+dist/
+.bun/
+
+# Logs
+*.log
+logs/

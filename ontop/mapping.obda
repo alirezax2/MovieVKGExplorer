@@ -1,0 +1,33 @@
+[PrefixDeclaration]
+:		https://example.org/movie-vkg/
+mv:		https://example.org/movie-vkg/
+owl:		http://www.w3.org/2002/07/owl#
+rdf:		http://www.w3.org/1999/02/22-rdf-syntax-ns#
+rdfs:		http://www.w3.org/2000/01/rdf-schema#
+xsd:		http://www.w3.org/2001/XMLSchema#
+
+[MappingDeclaration] @collection [[
+mappingId	mapping-movie-objects
+target		:movie/{object_id} a :Movie ; :title {title}^^xsd:string ; :releaseYear {release_year}^^xsd:integer ; :director {director}^^xsd:string ; :description {description}^^xsd:string ; :runtimeMinutes {runtime_minutes}^^xsd:integer ; :rating {rating}^^xsd:decimal ; :originalLanguage {original_language}^^xsd:string ; :hasGenreClass :class/{class} ; :hasSubclass :subclass/{subclass} ; :hasMetadataRegistry :registry/{metaid} .
+source		SELECT object_id, title, release_year, director, description, "class", subclass, metaid, runtime_minutes, rating, original_language FROM "public"."object"
+
+mappingId	mapping-movie-classes
+target		:class/{metaid} a :MovieClass ; :name {name}^^xsd:string ; :description {description}^^xsd:string ; rdfs:label {name}^^xsd:string ; :metaid {metaid}^^xsd:string .
+source		SELECT metaid, name, description FROM "public"."class"
+
+mappingId	mapping-movie-subclasses
+target		:subclass/{metaid} a :MovieSubclass ; :name {name}^^xsd:string ; :description {description}^^xsd:string ; :belongsToClass :class/{class_metaid} ; rdfs:label {name}^^xsd:string ; :metaid {metaid}^^xsd:string .
+source		SELECT metaid, class_metaid, name, description FROM "public"."subclass"
+
+mappingId	mapping-class-subclass-relations
+target		:relation/{relation_id} a :ClassSubclassRelation ; :hasParentClass :class/{class_metaid} ; :hasSubclass :subclass/{subclass_metaid} ; :relationType {relation_type}^^xsd:string ; :description {description}^^xsd:string .
+source		SELECT relation_id, class_metaid, subclass_metaid, relation_type, description FROM "public"."relation_class_subclass"
+
+mappingId	mapping-metadata-definitions
+target		:definition/{definition_id} a :MetadataDefinition ; :name {name}^^xsd:string ; :entityType {entity_type}^^xsd:string ; :description {description}^^xsd:string ; :dataType {data_type}^^xsd:string ; :namespace {namespace}^^xsd:string ; :version {version}^^xsd:string ; :appliesToRegistry :registry/{metaid} ; :metaid {metaid}^^xsd:string .
+source		SELECT definition_id, metaid, name, entity_type, description, data_type, namespace, version FROM "public"."definition"
+
+mappingId	mapping-metadata-registry
+target		:registry/{metaid} a :MetadataRegistryEntry ; :metaid {metaid}^^xsd:string ; :entityType {entity_type}^^xsd:string .
+source		SELECT metaid, entity_type FROM "public"."metadata_registry"
+]]

@@ -1,0 +1,20 @@
+# Environment variables (contains sensitive credentials)
+.env
+
+# Database dumps, backup files, and local logs
+*.sql.bak
+*.dump
+*.tar
+*.log
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Python bytecode (if python scripts are run locally)
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/

@@ -1,0 +1,10 @@
+PREFIX : <https://example.org/movie-vkg/>
+SELECT ?movie ?title ?year ?rating ?director WHERE {
+    ?movie a :Movie ;
+           :title ?title ;
+           :releaseYear ?year ;
+           :rating ?rating ;
+           :director ?director .
+}
+ORDER BY ?year
+LIMIT 5

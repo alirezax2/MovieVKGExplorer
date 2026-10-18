@@ -1,0 +1,144 @@
+# ==============================================================================
+# Docker Compose: Movie VKG Full Stack (PostgreSQL, Metabase, Ontop, FastAPI)
+# ==============================================================================
+# Preserves existing PostgreSQL and Metabase containers, volumes, and network.
+# Adds Ontop VKG and FastAPI semantic query engine.
+# ==============================================================================
+
+services:
+  postgres:
+    image: postgres:16.4-alpine
+    container_name: movie-metadata-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-movies_db}
+      POSTGRES_USER: ${POSTGRES_USER:-movie_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev_movie_master_secret_password_2026}
+      TZ: ${TZ:-UTC}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./movie-metadata-db/sql:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-movie_admin} -d ${POSTGRES_DB:-movies_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - movie_network
+
+  metabase:
+    image: metabase/metabase:v0.50.23
+    container_name: movie-metadata-metabase
+    restart: unless-stopped
+    environment:
+      MB_DB_FILE: /metabase-data/metabase.db
+      MB_JETTY_PORT: 3000
+      TZ: ${TZ:-UTC}
+    ports:
+      - "${METABASE_PORT:-3000}:3000"
+    volumes:
+      - metabase_data:/metabase-data
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || wget -q --spider http://localhost:3000/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 45s
+    networks:
+      - movie_network
+
+  ontop:
+    image: ontop/ontop:5.5.0
+    container_name: movie-metadata-ontop
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${ONTOP_PORT:-8080}:8080"
+    volumes:
+      - ./ontop:/opt/ontop/input:ro
+      - ./ontop/jdbc:/opt/ontop/jdbc:ro
+    environment:
+      ONTOP_ONTOLOGY_FILE: /opt/ontop/input/ontology.ttl
+      ONTOP_MAPPING_FILE: /opt/ontop/input/mapping.obda
+      ONTOP_PROPERTIES_FILE: /opt/ontop/input/ontop.properties
+      ONTOP_DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-movies_db}
+      ONTOP_DB_USER: ${ONTOP_DB_USER:-ontop_ro}
+      ONTOP_DB_PASSWORD: ${ONTOP_DB_PASSWORD:-dev_ontop_ro_secret_password_2026}
+      ONTOP_DISABLE_PORTAL_PAGE: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/bin/sh", "healthcheck.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    networks:
+      - movie_network
+
+  fastapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: movie-metadata-fastapi
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${FASTAPI_PORT:-8000}:8000"
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-movies_db}
+      POSTGRES_USER: ${ONTOP_DB_USER:-ontop_ro}
+      POSTGRES_PASSWORD: ${ONTOP_DB_PASSWORD:-dev_ontop_ro_secret_password_2026}
+      ONTOP_ENDPOINT_URL: http://ontop:8080/sparql
+      VKG_BASE_IRI: ${VKG_BASE_IRI:-https://example.org/movie-vkg/}
+      OMNIROUTE_BASE_URL: ${OMNIROUTE_BASE_URL:-https://omniroute.alphigma.com/v1}
+      OMNIROUTE_API_KEY: ${OMNIROUTE_API_KEY}
+      OMNIROUTE_MODEL: ${OMNIROUTE_MODEL:-no-think/antigravity/claude-sonnet-4-6}
+      API_KEY: ${API_KEY:-dev_movie_vkg_secret_api_key_2026}
+      ENVIRONMENT: production
+    depends_on:
+      ontop:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - movie_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: movie-metadata-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      fastapi:
+        condition: service_started
+    networks:
+      - movie_network
+
+volumes:
+  postgres_data:
+    name: movie_metadata_postgres_data
+  metabase_data:
+    name: movie_metadata_metabase_data
+
+networks:
+  movie_network:
+    name: movie_metadata_network
