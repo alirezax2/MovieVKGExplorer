@@ -8,7 +8,6 @@
 services:
   postgres:
     image: postgres:16.4-alpine
-    container_name: movie-metadata-postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-movies_db}
@@ -31,7 +30,6 @@ services:
 
   metabase:
     image: metabase/metabase:v0.50.23
-    container_name: movie-metadata-metabase
     restart: unless-stopped
     environment:
       MB_DB_FILE: /metabase-data/metabase.db
@@ -55,10 +53,9 @@ services:
 
   ontop:
     image: ontop/ontop:5.5.0
-    container_name: movie-metadata-ontop
     restart: unless-stopped
     ports:
-      - "127.0.0.1:${ONTOP_PORT:-8825}:8080"
+      - "${ONTOP_PORT:-8825}:8080"
     volumes:
       - ./ontop:/opt/ontop/input:ro
       - ./ontop/jdbc:/opt/ontop/jdbc:ro
@@ -70,15 +67,17 @@ services:
       ONTOP_DB_USER: ${ONTOP_DB_USER:-ontop_ro}
       ONTOP_DB_PASSWORD: ${ONTOP_DB_PASSWORD:-dev_ontop_ro_secret_password_2026}
       ONTOP_DISABLE_PORTAL_PAGE: "true"
+      ONTOP_HEALTHCHECK: query
+      ONTOP_HEALTHCHECK_QUERY: "SELECT * {}"
     depends_on:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "/bin/sh", "healthcheck.sh"]
+      test: ["CMD-SHELL", "wget -q -t1 --spider 'http://localhost:8080/sparql?query=SELECT+*+%7B%7D' || exit 1"]
       interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 15s
+      timeout: 10s
+      retries: 15
+      start_period: 45s
     networks:
       - movie_network
 
@@ -86,10 +85,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: movie-metadata-fastapi
     restart: unless-stopped
     ports:
-      - "127.0.0.1:${FASTAPI_PORT:-8025}:8025"
+      - "${FASTAPI_PORT:-8025}:8025"
     environment:
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
@@ -122,7 +120,6 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: movie-metadata-frontend
     restart: unless-stopped
     ports:
       - "5125:5125"
