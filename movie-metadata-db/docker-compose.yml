@@ -7,14 +7,15 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-movies_db}
       POSTGRES_USER: ${POSTGRES_USER:-movie_admin}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev_movie_master_secret_password_2026}
+      PGPORT: 5425
       TZ: ${TZ:-UTC}
     ports:
-      - "${POSTGRES_PORT:-5425}:5432"
+      - "${POSTGRES_PORT:-5425}:5425"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./sql:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-movie_admin} -d ${POSTGRES_DB:-movies_db}"]
+      test: ["CMD-SHELL", "pg_isready -p 5425 -U ${POSTGRES_USER:-movie_admin} -d ${POSTGRES_DB:-movies_db}"]
       interval: 5s
       timeout: 5s
       retries: 10

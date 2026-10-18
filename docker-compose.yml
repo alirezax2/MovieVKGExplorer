@@ -15,13 +15,14 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-movies_db}
       POSTGRES_USER: ${POSTGRES_USER:-movie_admin}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev_movie_master_secret_password_2026}
+      PGPORT: 5425
       TZ: ${TZ:-UTC}
     ports:
-      - "${POSTGRES_PORT:-5425}:5432"
+      - "${POSTGRES_PORT:-5425}:5425"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-movie_admin} -d ${POSTGRES_DB:-movies_db}"]
+      test: ["CMD-SHELL", "pg_isready -p 5425 -U ${POSTGRES_USER:-movie_admin} -d ${POSTGRES_DB:-movies_db}"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -63,11 +64,11 @@ services:
       ONTOP_ONTOLOGY_FILE: /opt/ontop/input/ontology.ttl
       ONTOP_MAPPING_FILE: /opt/ontop/input/mapping.obda
       ONTOP_PROPERTIES_FILE: /opt/ontop/input/ontop.properties
-      ONTOP_DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-movies_db}
+      ONTOP_DB_URL: jdbc:postgresql://postgres:5425/${POSTGRES_DB:-movies_db}
       ONTOP_DB_USER: ${ONTOP_DB_USER:-ontop_ro}
       ONTOP_DB_PASSWORD: ${ONTOP_DB_PASSWORD:-dev_ontop_ro_secret_password_2026}
       ONTOP_DISABLE_PORTAL_PAGE: "true"
-      ONTOP_WAIT_FOR: postgres:5432
+      ONTOP_WAIT_FOR: postgres:5425
     depends_on:
       postgres:
         condition: service_healthy
@@ -89,7 +90,7 @@ services:
       - "${FASTAPI_PORT:-8025}:8025"
     environment:
       POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
+      POSTGRES_PORT: 5425
       POSTGRES_DB: ${POSTGRES_DB:-movies_db}
       POSTGRES_USER: ${ONTOP_DB_USER:-ontop_ro}
       POSTGRES_PASSWORD: ${ONTOP_DB_PASSWORD:-dev_ontop_ro_secret_password_2026}

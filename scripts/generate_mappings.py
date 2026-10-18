@@ -232,7 +232,7 @@ def main():
     # 3. Write ontop.properties
     props_path = out_dir / "ontop.properties"
     props_content = f"""# Ontop VKG Connection Configuration
-jdbc.url=jdbc:postgresql://postgres:5432/{settings.postgres_db}
+jdbc.url=jdbc:postgresql://postgres:{settings.postgres_port}/{settings.postgres_db}
 jdbc.driver=org.postgresql.Driver
 jdbc.user={settings.postgres_user}
 jdbc.password={settings.postgres_password}
