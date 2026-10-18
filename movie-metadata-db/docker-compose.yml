@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev_movie_master_secret_password_2026}
       TZ: ${TZ:-UTC}
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${POSTGRES_PORT:-5425}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./sql:/docker-entrypoint-initdb.d:ro

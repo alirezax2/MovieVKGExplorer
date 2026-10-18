@@ -46,7 +46,7 @@ export default function ArchitectureGuide({ isModal = false, onClose = () => {} 
       name: "1. Client & Presentation Tier",
       icon: Terminal,
       color: "var(--accent-cyan)",
-      badge: "Port 5173",
+      badge: "Port 5125",
       items: [
         "React 19 + Bun 1.4 + Vite 8 SPA",
         "AI Assistant & Natural Language Q&A",
@@ -58,7 +58,7 @@ export default function ArchitectureGuide({ isModal = false, onClose = () => {} 
       name: "2. Security & API Gateway Tier",
       icon: ShieldCheck,
       color: "var(--accent-indigo)",
-      badge: "Port 8000",
+      badge: "Port 8025",
       items: [
         "FastAPI Asynchronous Gateway & Authentication",
         "RDFLib Syntax-Aware SPARQL AST Validator",
@@ -82,7 +82,7 @@ export default function ArchitectureGuide({ isModal = false, onClose = () => {} 
       name: "4. Relational Storage Tier",
       icon: Database,
       color: "var(--accent-emerald)",
-      badge: "Port 5432 / 3000",
+      badge: "Port 5425 / 3000",
       items: [
         "PostgreSQL 16.4 Single Source of Truth (1,000 movies)",
         "Dedicated Read-Only User 'ontop_ro' (SELECT-only privilege)",
@@ -96,7 +96,7 @@ export default function ArchitectureGuide({ isModal = false, onClose = () => {} 
     {
       title: "Frontend Application",
       tech: "React 19, Bun 1.4, Vite 8",
-      port: "5173",
+      port: "5125",
       role: "User Interface & Semantic Explorer",
       description:
         "Modern single-page application with cyber-dark glassmorphic design. Features 4 interactive tabs (AI Assistant, SPARQL Studio, Ontology Explorer, Relational Schema), instant query suggestions, dark/light theme toggle, and live status monitors.",
@@ -107,7 +107,7 @@ export default function ArchitectureGuide({ isModal = false, onClose = () => {} 
     {
       title: "FastAPI Security Gateway",
       tech: "Python 3.12, FastAPI, Uvicorn, UV",
-      port: "8000",
+      port: "8025",
       role: "Secure Query Broker & API Layer",
       description:
         "Coordinates all client requests. Houses health/ready probes, ontology discovery, raw SPARQL dispatch, and error sanitization to prevent internal database secrets or connection strings from leaking to clients.",
@@ -151,7 +151,7 @@ export default function ArchitectureGuide({ isModal = false, onClose = () => {} 
     {
       title: "PostgreSQL 16.4 Database",
       tech: "PostgreSQL 16.4 Alpine",
-      port: "5432",
+      port: "5425",
       role: "Enterprise Relational Source of Truth",
       description:
         "Primary storage containing 1,000 real movies, 14 taxonomy classes, 50 subclasses, and schema definitions. Hardware-level security enforces ontop_ro user permissions to disallow any write or DDL operations.",
@@ -951,8 +951,79 @@ LIMIT 5;`}
               <strong style={{ color: "var(--accent-indigo)" }}>Why this runs in ~2.8 ms:</strong> A naive translator would produce 4 separate table scans with 3 self-joins. Ontop observes that <code style={{ color: "var(--text-primary)" }}>:title</code>, <code style={{ color: "var(--text-primary)" }}>:rating</code>, and <code style={{ color: "var(--text-primary)" }}>:hasGenreClass</code> reside on the same row in <code style={{ color: "var(--text-primary)" }}>public.object</code>. It collapses them into <strong>1 single scan</strong> and leverages PostgreSQL's index on <code style={{ color: "var(--text-primary)" }}>idx_object_class</code>!
             </div>
           </div>
+
+          {/* OmniRoute Models & Alphigma Smart Routing Aliases Table */}
+          <div className="glass-panel" style={{ padding: "24px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
+              <Cpu size={20} color="var(--accent-indigo)" />
+              <h3 style={{ fontSize: "1.15rem", fontWeight: 700 }}>
+                OmniRoute Model Routing & Smart Routing Aliases (omniroute.alphigma.com)
+              </h3>
+            </div>
+            <p style={{ color: "var(--text-secondary)", fontSize: "0.88rem", marginBottom: "16px" }}>
+              The system integrates with OmniRoute as an OpenAI-compatible gateway, providing both dedicated model routing (Claude 3.5 Sonnet) and Alphigma smart routing aliases for different quantitative and reasoning workloads:
+            </p>
+
+            <div style={{ overflowX: "auto" }}>
+              <table className="vkg-table">
+                <thead>
+                  <tr>
+                    <th>Model / Alias</th>
+                    <th>Routing Category</th>
+                    <th>Best Use in Alphigma</th>
+                    <th>Badge</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code className="model-code-val">claude-sonnet</code></td>
+                    <td>Direct Dedicated</td>
+                    <td>Default high-precision model pipeline & grounded SPARQL translation</td>
+                    <td><span className="badge badge-indigo">Claude 3.5</span></td>
+                  </tr>
+                  <tr>
+                    <td><code className="model-code-val">auto</code></td>
+                    <td>Smart Routing</td>
+                    <td>General-purpose, balanced model selection</td>
+                    <td><span className="badge badge-cyan">Balanced</span></td>
+                  </tr>
+                  <tr>
+                    <td><code className="model-code-val">auto/smart</code></td>
+                    <td>Smart Routing</td>
+                    <td>Complex quantitative research and difficult reasoning</td>
+                    <td><span className="badge badge-purple">Smart</span></td>
+                  </tr>
+                  <tr>
+                    <td><code className="model-code-val">auto/coding</code></td>
+                    <td>Smart Routing</td>
+                    <td>Writing Python, debugging, and code generation</td>
+                    <td><span className="badge badge-emerald">Coding</span></td>
+                  </tr>
+                  <tr>
+                    <td><code className="model-code-val">auto/fast</code></td>
+                    <td>Smart Routing</td>
+                    <td>Interactive tools and low-latency tasks</td>
+                    <td><span className="badge badge-amber">Fast</span></td>
+                  </tr>
+                  <tr>
+                    <td><code className="model-code-val">auto/cheap</code></td>
+                    <td>Smart Routing</td>
+                    <td>Bulk ingestion, simple summaries, and routine processing</td>
+                    <td><span className="badge badge-emerald">Economy</span></td>
+                  </tr>
+                  <tr>
+                    <td><code className="model-code-val">auto/offline</code></td>
+                    <td>Smart Routing</td>
+                    <td>Local model providers, where supported</td>
+                    <td><span className="badge badge-rose">Offline</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       )}
+
 
       {/* =================================================================== */}
       {/* SUB-TAB 5: DIFFERENT SECTIONS GUIDE (APP TOUR) */}

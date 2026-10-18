@@ -18,7 +18,7 @@ class Settings(BaseSettings):
 
     # Database connection parameters
     postgres_host: str = Field(default="127.0.0.1", alias="POSTGRES_HOST")
-    postgres_port: int = Field(default=5432, alias="POSTGRES_PORT")
+    postgres_port: int = Field(default=5425, alias="POSTGRES_PORT")
     postgres_db: str = Field(default="movies_db", alias="POSTGRES_DB")
     postgres_user: str = Field(default="ontop_ro", alias="POSTGRES_USER")
     postgres_password: str = Field(default="dev_ontop_ro_secret_password_2026", alias="POSTGRES_PASSWORD")
@@ -37,10 +37,10 @@ class Settings(BaseSettings):
     # API Security and runtime controls
     api_key: str = Field(default="dev_movie_vkg_secret_api_key_2026", alias="API_KEY")
     fastapi_host: str = Field(default="127.0.0.1", alias="FASTAPI_HOST")
-    fastapi_port: int = Field(default=8000, alias="FASTAPI_PORT")
+    fastapi_port: int = Field(default=8025, alias="FASTAPI_PORT")
     environment: str = Field(default="development", alias="ENVIRONMENT")
     cors_origins: str = Field(
-        default="http://localhost:3000,http://localhost:5173,http://localhost:8000,http://127.0.0.1:5173",
+        default="http://localhost:3000,http://localhost:5125,http://localhost:8025,http://127.0.0.1:5125,http://localhost:5173,http://localhost:8000,http://127.0.0.1:5173",
         alias="CORS_ORIGINS",
     )
     max_sparql_results: int = Field(default=500, alias="MAX_SPARQL_RESULTS")

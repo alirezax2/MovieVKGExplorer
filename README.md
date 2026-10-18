@@ -106,7 +106,7 @@ cp .env.example .env
 Verify or update the configuration in `.env`:
 ```dotenv
 POSTGRES_HOST=127.0.0.1
-POSTGRES_PORT=5432
+POSTGRES_PORT=5425
 POSTGRES_DB=movies_db
 POSTGRES_USER=ontop_ro
 POSTGRES_PASSWORD=dev_ontop_ro_secret_password_2026
@@ -160,9 +160,9 @@ docker run -d --name movie-metadata-ontop --network movie_metadata_network \
 
 ### Step 5: Start FastAPI Backend
 ```bash
-uv run uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+uv run uvicorn app.main:app --host 127.0.0.1 --port 8025 --reload
 ```
-API docs available at: `http://127.0.0.1:8000/docs`
+API docs available at: `http://127.0.0.1:8025/docs`
 
 ### Step 6: Start React + Bun Frontend
 ```bash
@@ -170,7 +170,7 @@ cd frontend
 bun install
 bun run dev
 ```
-Open your browser at: `http://localhost:5173`
+Open your browser at: `http://localhost:5125`
 
 ---
 
@@ -181,27 +181,27 @@ All protected endpoints require the `X-API-Key` header or `Authorization: Bearer
 ### 1. Health & Readiness
 ```bash
 # Liveness
-curl -s http://127.0.0.1:8000/health
+curl -s http://127.0.0.1:8025/health
 
 # Readiness check (PostgreSQL, Ontop, OmniRoute)
-curl -s http://127.0.0.1:8000/ready
+curl -s http://127.0.0.1:8025/ready
 ```
 
 ### 2. Discovered Relational Schema (`GET /schema`)
 ```bash
 curl -s -H "X-API-Key: dev_movie_vkg_secret_api_key_2026" \
-  http://127.0.0.1:8000/schema
+  http://127.0.0.1:8025/schema
 ```
 
 ### 3. Ontology Specification (`GET /ontology`)
 ```bash
 curl -s -H "X-API-Key: dev_movie_vkg_secret_api_key_2026" \
-  http://127.0.0.1:8000/ontology
+  http://127.0.0.1:8025/ontology
 ```
 
 ### 4. Execute Read-Only SPARQL (`POST /query`)
 ```bash
-curl -s -X POST http://127.0.0.1:8000/query \
+curl -s -X POST http://127.0.0.1:8025/query \
   -H "Content-Type: application/json" \
   -H "X-API-Key: dev_movie_vkg_secret_api_key_2026" \
   -d '{
@@ -226,7 +226,7 @@ curl -s -X POST http://127.0.0.1:8000/query \
 
 ### 5. Natural Language Query via OmniRoute (`POST /ask`)
 ```bash
-curl -s -X POST http://127.0.0.1:8000/ask \
+curl -s -X POST http://127.0.0.1:8025/ask \
   -H "Content-Type: application/json" \
   -H "X-API-Key: dev_movie_vkg_secret_api_key_2026" \
   -d '{"question": "What are the top 3 highest rated movies in the database?"}'
@@ -248,7 +248,20 @@ curl -s -X POST http://127.0.0.1:8000/ask \
 }
 ```
 
+You can optionally select an active model or smart routing alias using the `"model"` field (e.g. `{"question": "...", "model": "auto/smart"}`):
+
+| Model value | Best use in Alphigma |
+| :--- | :--- |
+| **`claude-sonnet`** | Direct Claude 3.5 Sonnet route / high precision |
+| **`auto`** | General-purpose, balanced model selection |
+| **`auto/smart`** | Complex quantitative research and difficult reasoning |
+| **`auto/coding`** | Writing Python, debugging, and code generation |
+| **`auto/fast`** | Interactive tools and low-latency tasks |
+| **`auto/cheap`** | Bulk ingestion, simple summaries, and routine processing |
+| **`auto/offline`** | Local model providers, where supported |
+
 ---
+
 
 ## 5. Security & Query Governance
 

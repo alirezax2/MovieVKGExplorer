@@ -23,8 +23,9 @@ async def ask_question(
     Translates the question to SPARQL via OmniRoute, validates the query,
     executes it through Ontop, and synthesizes a grounded, factual answer.
     """
-    llm_service = LLMService()
+    llm_service = LLMService(model=request.model)
     sparql_service = SPARQLService()
+    active_model = request.model or settings.omniroute_model
 
     # Step 1: Generate SPARQL using OmniRoute LLM
     try:
@@ -45,7 +46,7 @@ async def ask_question(
             row_count=0,
             results=[],
             execution_time_ms=0.0,
-            model=settings.omniroute_model,
+            model=active_model,
         )
 
     # Step 2: Validate and execute query against Ontop VKG
@@ -83,5 +84,6 @@ async def ask_question(
         row_count=query_result["row_count"],
         results=query_result["results"],
         execution_time_ms=query_result["execution_time_ms"],
-        model=settings.omniroute_model,
+        model=active_model,
     )
+

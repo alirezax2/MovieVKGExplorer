@@ -9,6 +9,7 @@ from fastapi.responses import JSONResponse
 
 from app.api.ask import router as ask_router
 from app.api.health import router as health_router
+from app.api.models import router as models_router
 from app.api.ontology import router as ontology_router
 from app.api.query import router as query_router
 from app.api.schema import router as schema_router
@@ -73,6 +74,7 @@ app.include_router(schema_router)
 app.include_router(ontology_router)
 app.include_router(query_router)
 app.include_router(ask_router)
+app.include_router(models_router)
 
 
 if __name__ == "__main__":

@@ -17,6 +17,17 @@ from app.config import settings
 from app.services.ontology_service import OntologyService
 
 
+OMNIROUTE_MODEL_ALIASES: Dict[str, str] = {
+    "claude-sonnet": settings.omniroute_model,
+    "auto": "auto",
+    "auto/smart": "auto/smart",
+    "auto/coding": "auto/coding",
+    "auto/fast": "auto/fast",
+    "auto/cheap": "auto/cheap",
+    "auto/offline": "auto/offline",
+}
+
+
 class LLMServiceError(Exception):
     def __init__(self, message: str, status_code: int = 502):
         super().__init__(message)
@@ -35,7 +46,9 @@ class LLMService:
     ):
         self.base_url = base_url or settings.omniroute_base_url
         self.api_key = api_key or settings.omniroute_api_key
-        self.model = model or settings.omniroute_model
+        raw_model = model or settings.omniroute_model
+        self.requested_model = raw_model
+        self.model = OMNIROUTE_MODEL_ALIASES.get(raw_model, raw_model)
         self.timeout = timeout_seconds or settings.llm_timeout_seconds
         self.ontology_service = ontology_service or OntologyService()
 

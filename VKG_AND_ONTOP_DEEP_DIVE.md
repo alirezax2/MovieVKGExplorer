@@ -852,7 +852,7 @@ User Browser (React)         FastAPI Backend            OmniRoute LLM           
 
 All services are running locally via Docker Compose. You can interact with and verify every tier of the architecture:
 
-- **Web Explorer UI:** Open [http://localhost:5173](http://localhost:5173) in your browser.
-- **FastAPI Interactive Swagger UI:** Open [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs).
+- **Web Explorer UI:** Open [http://localhost:5125](http://localhost:5125) in your browser.
+- **FastAPI Interactive Swagger UI:** Open [http://127.0.0.1:8025/docs](http://127.0.0.1:8025/docs).
 - **Ontop SPARQL Portal:** Open [http://127.0.0.1:8080](http://127.0.0.1:8080).
 - **Metabase BI Dashboards:** Open [http://localhost:3000](http://localhost:3000).

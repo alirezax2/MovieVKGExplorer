@@ -22,8 +22,10 @@ import {
   Layers,
 } from "lucide-react";
 import ArchitectureGuide from "./components/ArchitectureGuide";
+import ModelSelector, { AVAILABLE_MODELS } from "./components/ModelSelector";
 
-const DEFAULT_API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const DEFAULT_API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8025";
+
 const DEFAULT_API_KEY = "dev_movie_vkg_secret_api_key_2026";
 
 const SAMPLE_QUESTIONS = [
@@ -129,6 +131,19 @@ export default function App() {
   const [askLoading, setAskLoading] = useState(false);
   const [askResult, setAskResult] = useState(null);
   const [askError, setAskError] = useState(null);
+  const [selectedModel, setSelectedModel] = useState(() => {
+    return localStorage.getItem("movie_vkg_selected_model") || "claude-sonnet";
+  });
+
+  const handleSelectModel = (modelId) => {
+    setSelectedModel(modelId);
+    try {
+      localStorage.setItem("movie_vkg_selected_model", modelId);
+    } catch {
+      // ignore localStorage restriction
+    }
+  };
+
 
   // SPARQL Studio state
   const [sparqlQuery, setSparqlQuery] = useState(SAMPLE_QUERIES[0].query);
@@ -206,8 +221,9 @@ export default function App() {
     }
   }, [activeTab]);
 
-  const handleAsk = async (qToAsk) => {
+  const handleAsk = async (qToAsk, modelOverride) => {
     const q = qToAsk || question;
+    const modelToUse = modelOverride || selectedModel;
     if (!q.trim()) return;
     setAskLoading(true);
     setAskError(null);
@@ -220,8 +236,9 @@ export default function App() {
           "Content-Type": "application/json",
           "X-API-Key": apiKey,
         },
-        body: JSON.stringify({ question: q }),
+        body: JSON.stringify({ question: q, model: modelToUse }),
       });
+
 
       const data = await res.json();
       if (!res.ok) {
@@ -360,12 +377,15 @@ export default function App() {
                 Ontop VKG: {health.ontop_connected ? "Active" : "Offline"}
               </div>
 
-              <div className="badge badge-indigo">
-                <Cpu size={12} />
-                OmniRoute: claude-sonnet
-              </div>
+              <ModelSelector
+                selectedModel={selectedModel}
+                onSelectModel={handleSelectModel}
+                align="right"
+                variant="header"
+              />
             </div>
           )}
+
 
           {/* Dark / Light Mode Switch Icon Button */}
           <button
@@ -596,12 +616,53 @@ export default function App() {
                   Ask natural language questions about the Movie Knowledge Graph
                 </h2>
               </div>
-              <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem", marginBottom: "20px" }}>
+              <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem", marginBottom: "16px" }}>
                 OmniRoute translates your query into validated, read-only SPARQL. Ontop translates SPARQL into SQL and executes it over PostgreSQL without materializing triples.
               </p>
 
+              {/* OmniRoute Model Routing Selector */}
+              <div className="model-quick-bar">
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--text-secondary)", fontSize: "0.78rem", fontWeight: 600 }}>
+                  <Cpu size={14} color="var(--accent-indigo)" />
+                  <span>OmniRoute Model:</span>
+                </div>
+                {AVAILABLE_MODELS.map((m) => (
+                  <button
+                    key={m.id}
+                    type="button"
+                    onClick={() => handleSelectModel(m.id)}
+                    className={`model-quick-pill ${selectedModel === m.id ? "active" : ""}`}
+                    title={`${m.name}: ${m.bestUse}`}
+                  >
+                    <span>{m.id}</span>
+                    <span className={`badge ${m.badgeClass}`} style={{ fontSize: "0.6rem", padding: "0 4px" }}>
+                      {m.badge}
+                    </span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Model Description Callout */}
+              <div
+                style={{
+                  fontSize: "0.76rem",
+                  color: "var(--text-muted)",
+                  marginBottom: "16px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  flexWrap: "wrap",
+                }}
+              >
+                <span>Best use in Alphigma:</span>
+                <strong style={{ color: "var(--text-primary)" }}>
+                  {AVAILABLE_MODELS.find((m) => m.id === selectedModel)?.bestUse}
+                </strong>
+              </div>
+
               {/* Sample Suggestions */}
               <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "16px" }}>
+
                 {SAMPLE_QUESTIONS.map((q, idx) => (
                   <button
                     key={idx}
@@ -723,15 +784,22 @@ export default function App() {
                     background: "var(--bg-banner)",
                   }}
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px", flexWrap: "wrap" }}>
                     <Sparkles size={18} color="var(--accent-cyan)" />
                     <span style={{ fontWeight: 600, color: "var(--accent-cyan)", fontSize: "0.9rem" }}>
                       Grounded Answer
                     </span>
-                    <span style={{ marginLeft: "auto", fontSize: "0.75rem", color: "var(--text-muted)" }}>
-                      {askResult.row_count} records retrieved in {askResult.execution_time_ms} ms
-                    </span>
+                    <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                      <span className="badge badge-indigo" style={{ textTransform: "none", fontSize: "0.72rem" }}>
+                        <Cpu size={12} />
+                        {askResult.model || selectedModel}
+                      </span>
+                      <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
+                        {askResult.row_count} records ({askResult.execution_time_ms} ms)
+                      </span>
+                    </div>
                   </div>
+
                   <p style={{ fontSize: "1.05rem", lineHeight: 1.6, color: "var(--text-primary)" }}>
                     {askResult.explanation}
                   </p>

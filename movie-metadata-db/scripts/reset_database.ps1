@@ -69,6 +69,6 @@ docker compose exec -T postgres psql -U movie_admin -d movies_db -f /docker-entr
 Write-Host "`n========================================================================" -ForegroundColor Green
 Write-Host " RESET COMPLETE! SUCCESSFUL ENVIRONMENT RESEED                           " -ForegroundColor Green
 Write-Host "========================================================================" -ForegroundColor Green
-Write-Host " PostgreSQL is running at: localhost:5432"
+Write-Host " PostgreSQL is running at: localhost:5425"
 Write-Host " Metabase is running at:   http://localhost:3000"
 Write-Host "========================================================================"

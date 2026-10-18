@@ -16,7 +16,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev_movie_master_secret_password_2026}
       TZ: ${TZ:-UTC}
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${POSTGRES_PORT:-5425}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./movie-metadata-db/sql:/docker-entrypoint-initdb.d:ro
@@ -89,7 +89,7 @@ services:
     container_name: movie-metadata-fastapi
     restart: unless-stopped
     ports:
-      - "127.0.0.1:${FASTAPI_PORT:-8000}:8000"
+      - "127.0.0.1:${FASTAPI_PORT:-8025}:8025"
     environment:
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
@@ -102,6 +102,7 @@ services:
       OMNIROUTE_API_KEY: ${OMNIROUTE_API_KEY}
       OMNIROUTE_MODEL: ${OMNIROUTE_MODEL:-no-think/antigravity/claude-sonnet-4-6}
       API_KEY: ${API_KEY:-dev_movie_vkg_secret_api_key_2026}
+      FASTAPI_PORT: 8025
       ENVIRONMENT: production
     depends_on:
       ontop:
@@ -109,7 +110,7 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8025/health')"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -124,9 +125,9 @@ services:
     container_name: movie-metadata-frontend
     restart: unless-stopped
     ports:
-      - "5173:5173"
+      - "5125:5125"
     environment:
-      - VITE_API_URL=http://localhost:8000
+      - VITE_API_URL=http://localhost:8025
     depends_on:
       fastapi:
         condition: service_started

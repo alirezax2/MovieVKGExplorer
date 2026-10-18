@@ -57,3 +57,18 @@ class OntologyResponse(BaseModel):
     ontology_ttl: str
     classes: List[OntologyClassInfo]
     properties: List[OntologyPropertyInfo]
+
+
+class ModelInfo(BaseModel):
+    id: str
+    name: str
+    badge: str
+    category: str
+    best_use: str
+    description: str
+
+
+class AvailableModelsResponse(BaseModel):
+    default: str
+    models: List[ModelInfo]
+

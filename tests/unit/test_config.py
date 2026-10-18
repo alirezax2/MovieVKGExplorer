@@ -10,7 +10,7 @@ def test_config_defaults():
         POSTGRES_PASSWORD="secret_password",
     )
     assert settings.postgres_db == "test_db"
-    assert settings.postgres_port == 5432
+    assert settings.postgres_port == 5425
     assert "postgresql+psycopg://" in settings.database_url
     assert "secret_password" not in settings.safe_database_url
     assert "***" in settings.safe_database_url
@@ -18,13 +18,13 @@ def test_config_defaults():
 
 def test_cors_origins_parsing():
     settings = Settings(
-        CORS_ORIGINS="http://localhost:3000, http://example.com ,http://127.0.0.1:5173",
+        CORS_ORIGINS="http://localhost:3000, http://example.com ,http://127.0.0.1:5125",
     )
     origins = settings.parsed_cors_origins
     assert len(origins) == 3
     assert "http://localhost:3000" in origins
     assert "http://example.com" in origins
-    assert "http://127.0.0.1:5173" in origins
+    assert "http://127.0.0.1:5125" in origins
 
 
 def test_alphigma_omniroute_alias_fallback(monkeypatch):

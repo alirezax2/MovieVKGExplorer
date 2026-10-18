@@ -1,6 +1,7 @@
 """Integration tests for FastAPI application endpoints."""
 
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
+
 
 
 def test_health_endpoint(client):
@@ -95,3 +96,49 @@ def test_ask_endpoint_with_mocked_llm(mock_openai_cls, client, auth_headers):
     assert data["row_count"] == 2
     assert "Tears of Summit" in data["explanation"] or len(data["results"]) == 2
     assert "SELECT ?m ?title" in data["generated_sparql"]
+
+
+def test_get_available_models(client):
+    response = client.get("/models")
+    assert response.status_code == 200
+    data = response.json()
+    assert "default" in data
+    assert "models" in data
+    model_ids = [m["id"] for m in data["models"]]
+    assert "claude-sonnet" in model_ids
+    assert "auto" in model_ids
+    assert "auto/smart" in model_ids
+    assert "auto/coding" in model_ids
+    assert "auto/fast" in model_ids
+    assert "auto/cheap" in model_ids
+    assert "auto/offline" in model_ids
+
+
+@patch("app.services.llm_service.AsyncOpenAI")
+def test_ask_endpoint_with_custom_model(mock_openai_class, client, auth_headers):
+    mock_instance = mock_openai_class.return_value
+    mock_instance.chat.completions.create = AsyncMock()
+
+    mock_gen_choice = AsyncMock()
+    mock_gen_choice.message.content = '{"sparql": "PREFIX : <https://example.org/movie-vkg/> SELECT ?m ?title WHERE { ?m a :Movie ; :title ?title } LIMIT 1", "explanation": "Test movie query"}'
+
+    mock_syn_choice = AsyncMock()
+    mock_syn_choice.message.content = "Result explanation from auto/smart."
+
+    mock_resp1 = AsyncMock()
+    mock_resp1.choices = [mock_gen_choice]
+    mock_resp2 = AsyncMock()
+    mock_resp2.choices = [mock_syn_choice]
+
+    mock_instance.chat.completions.create.side_effect = [mock_resp1, mock_resp2]
+
+    response = client.post(
+        "/ask",
+        json={"question": "Find 1 movie", "model": "auto/smart"},
+        headers=auth_headers,
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["model"] == "auto/smart"
+
+

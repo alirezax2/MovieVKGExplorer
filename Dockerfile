@@ -35,9 +35,9 @@ COPY ontop/ /app/ontop/
 COPY artifacts/ /app/artifacts/
 COPY pyproject.toml /app/
 
-EXPOSE 8000
+EXPOSE 8025
 
 HEALTHCHECK --interval=10s --timeout=5s --retries=5 --start-period=10s \
-  CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')" || exit 1
+  CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8025/health')" || exit 1
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8025"]

@@ -402,7 +402,24 @@ Step 8: Return Unified JSON Response (Question, SPARQL, Results, Grounded Answer
 
 If an LLM produces an invalid query, the AST validator catches it before it touches Ontop, protecting database resources. If a user asks a question outside the domain of the ontology, the model reports that the ontology lacks relevant vocabulary rather than hallucinating predicates.
 
+### OmniRoute Models & Alphigma Smart Routing Aliases
+
+The API and frontend provide a dynamic model selector supporting dedicated model routing and Alphigma smart routing aliases from `omniroute.alphigma.com`:
+
+| Model Value | Category | Best Use in Alphigma |
+| :--- | :--- | :--- |
+| **`claude-sonnet`** | Direct Dedicated | Default high-precision model pipeline & grounded SPARQL translation |
+| **`auto`** | Smart Routing | General-purpose, balanced model selection |
+| **`auto/smart`** | Smart Routing | Complex quantitative research and difficult reasoning |
+| **`auto/coding`** | Smart Routing | Writing Python, debugging, and code generation |
+| **`auto/fast`** | Smart Routing | Interactive tools and low-latency tasks |
+| **`auto/cheap`** | Smart Routing | Bulk ingestion, simple summaries, and routine processing |
+| **`auto/offline`** | Smart Routing | Local model providers, where supported |
+
+Available models can also be queried programmatically via `GET /models`.
+
 ---
+
 
 ## 9. Frontend: React, Bun, and Vite
 
@@ -427,11 +444,11 @@ The entire stack is declared in [`docker-compose.yml`](file:///d:/mycodes/Antigr
 
 | Service | Container Name | Image / Build | Port | Purpose |
 | :--- | :--- | :--- | :--- | :--- |
-| **`postgres`** | `movie-metadata-postgres` | `postgres:16.4-alpine` | `5432:5432` | Source of truth (1,000 movies, 14 classes, 50 subclasses) |
+| **`postgres`** | `movie-metadata-postgres` | `postgres:16.4-alpine` | `5425:5432` | Source of truth (1,000 movies, 14 classes, 50 subclasses) |
 | **`metabase`** | `movie-metadata-metabase` | `metabase/metabase:v0.50.23` | `3000:3000` | Relational SQL dashboards & BI analytics |
 | **`ontop`** | `movie-metadata-ontop` | `ontop/ontop:5.5.0` | `127.0.0.1:8080:8080` | SPARQL-to-SQL virtual knowledge graph engine |
-| **`fastapi`** | `movie-metadata-fastapi` | Multi-stage Dockerfile (`uv`) | `127.0.0.1:8000:8000` | Secure REST API, AST validator, OmniRoute agent |
-| **`frontend`** | `movie-metadata-frontend` | `oven/bun:alpine` (Vite) | `5173:5173` | React explorer web interface |
+| **`fastapi`** | `movie-metadata-fastapi` | Multi-stage Dockerfile (`uv`) | `127.0.0.1:8025:8025` | Secure REST API, AST validator, OmniRoute agent |
+| **`frontend`** | `movie-metadata-frontend` | `oven/bun:alpine` (Vite) | `5125:5125` | React explorer web interface |
 
 ### Launching the Full Stack
 ```bash
@@ -440,7 +457,7 @@ docker compose up -d --build
 ```
 
 ### Accessing Services
-- **Web Explorer UI:** [http://localhost:5173](http://localhost:5173)
-- **FastAPI Interactive Docs:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- **Web Explorer UI:** [http://localhost:5125](http://localhost:5125)
+- **FastAPI Interactive Docs:** [http://127.0.0.1:8025/docs](http://127.0.0.1:8025/docs)
 - **Metabase BI:** [http://localhost:3000](http://localhost:3000)
-- **PostgreSQL Database:** `localhost:5432` (`movies_db`)
+- **PostgreSQL Database:** `localhost:5425` (`movies_db`)

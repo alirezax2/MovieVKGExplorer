@@ -59,3 +59,24 @@ async def test_mocked_llm_generation():
     res = await service.generate_sparql("Show me 5 movies")
     assert "SELECT ?m" in res["sparql"]
     assert res["explanation"] == "Select 5 movies"
+
+
+def test_omniroute_model_alias_resolution():
+    from app.config import settings
+
+    service_default = LLMService()
+    assert service_default.model == settings.omniroute_model
+
+    service_sonnet = LLMService(model="claude-sonnet")
+    assert service_sonnet.model == settings.omniroute_model
+    assert service_sonnet.requested_model == "claude-sonnet"
+
+    service_smart = LLMService(model="auto/smart")
+    assert service_smart.model == "auto/smart"
+
+    service_coding = LLMService(model="auto/coding")
+    assert service_coding.model == "auto/coding"
+
+    service_custom = LLMService(model="gpt-4o")
+    assert service_custom.model == "gpt-4o"
+

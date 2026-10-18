@@ -29,3 +29,9 @@ class AskRequest(BaseModel):
         max_length=500,
         examples=["What are the top 5 highest rated movies in the database?"],
     )
+    model: Optional[str] = Field(
+        default=None,
+        description="Optional OmniRoute model identifier or smart routing alias (e.g. 'claude-sonnet', 'auto', 'auto/smart', 'auto/coding', 'auto/fast', 'auto/cheap', 'auto/offline')",
+        examples=["auto/smart", "claude-sonnet"],
+    )
+
