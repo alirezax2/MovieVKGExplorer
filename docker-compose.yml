@@ -7,7 +7,9 @@
 
 services:
   postgres:
-    image: postgres:16.4-alpine
+    build:
+      context: ./movie-metadata-db
+      dockerfile: Dockerfile
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-movies_db}
@@ -18,7 +20,6 @@ services:
       - "${POSTGRES_PORT:-5425}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./movie-metadata-db/sql:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-movie_admin} -d ${POSTGRES_DB:-movies_db}"]
       interval: 5s
@@ -52,13 +53,12 @@ services:
       - movie_network
 
   ontop:
-    image: ontop/ontop:5.5.0
+    build:
+      context: ./ontop
+      dockerfile: Dockerfile
     restart: unless-stopped
     ports:
       - "${ONTOP_PORT:-8825}:8080"
-    volumes:
-      - ./ontop:/opt/ontop/input:ro
-      - ./ontop/jdbc:/opt/ontop/jdbc:ro
     environment:
       ONTOP_ONTOLOGY_FILE: /opt/ontop/input/ontology.ttl
       ONTOP_MAPPING_FILE: /opt/ontop/input/mapping.obda
@@ -67,16 +67,15 @@ services:
       ONTOP_DB_USER: ${ONTOP_DB_USER:-ontop_ro}
       ONTOP_DB_PASSWORD: ${ONTOP_DB_PASSWORD:-dev_ontop_ro_secret_password_2026}
       ONTOP_DISABLE_PORTAL_PAGE: "true"
-      ONTOP_HEALTHCHECK: query
-      ONTOP_HEALTHCHECK_QUERY: "SELECT * {}"
+      ONTOP_WAIT_FOR: postgres:5432
     depends_on:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -t1 --spider 'http://localhost:8080/sparql?query=SELECT+*+%7B%7D' || exit 1"]
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8080' || exit 1"]
       interval: 10s
-      timeout: 10s
-      retries: 15
+      timeout: 5s
+      retries: 20
       start_period: 90s
     networks:
       - movie_network
