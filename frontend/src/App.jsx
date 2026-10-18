@@ -118,7 +118,7 @@ export default function App() {
 
   // Health state
   const [health, setHealth] = useState(null);
-  const [ready, setReady] = useState(null);
+  const [_ready, setReady] = useState(null);
 
   // Ask tab state
   const [question, setQuestion] = useState("");
@@ -288,7 +288,7 @@ export default function App() {
       <header
         style={{
           borderBottom: "1px solid var(--border-color)",
-          background: "rgba(10, 14, 23, 0.85)",
+          background: "var(--bg-header)",
           backdropFilter: "blur(12px)",
           position: "sticky",
           top: 0,
@@ -325,7 +325,7 @@ export default function App() {
         </div>
 
         {/* Status Indicators & Controls */}
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           {health && (
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <div
@@ -363,6 +363,22 @@ export default function App() {
             </div>
           )}
 
+          {/* Dark / Light Mode Switch Icon Button */}
+          <button
+            onClick={toggleTheme}
+            className="theme-toggle-btn"
+            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            <div key={theme} className="theme-toggle-icon">
+              {theme === "dark" ? (
+                <Sun size={18} color="#f59e0b" />
+              ) : (
+                <Moon size={18} color="#6366f1" />
+              )}
+            </div>
+          </button>
+
           <button
             onClick={() => setShowKeyConfig(!showKeyConfig)}
             className="glass-panel"
@@ -388,6 +404,7 @@ export default function App() {
               borderRadius: "var(--radius-md)",
             }}
             title="Refresh status"
+            aria-label="Refresh status"
           >
             <RefreshCw size={16} />
           </button>
@@ -401,7 +418,7 @@ export default function App() {
           style={{
             margin: "12px 28px",
             padding: "16px 20px",
-            background: "rgba(17, 24, 39, 0.95)",
+            background: "var(--bg-card)",
             border: "1px solid var(--border-highlight)",
             display: "flex",
             alignItems: "center",
@@ -455,7 +472,7 @@ export default function App() {
           display: "flex",
           borderBottom: "1px solid var(--border-color)",
           padding: "0 28px",
-          background: "rgba(15, 23, 42, 0.4)",
+          background: "var(--bg-nav)",
         }}
       >
         <button
@@ -560,7 +577,7 @@ export default function App() {
                       handleAsk(q);
                     }}
                     style={{
-                      background: "rgba(255, 255, 255, 0.05)",
+                      background: "var(--bg-subtle)",
                       border: "1px solid var(--border-color)",
                       color: "var(--text-secondary)",
                       padding: "6px 12px",
@@ -649,15 +666,15 @@ export default function App() {
                 className="glass-panel"
                 style={{
                   padding: "16px 20px",
-                  borderColor: "rgba(244, 63, 94, 0.4)",
-                  background: "rgba(244, 63, 94, 0.1)",
+                  borderColor: "var(--border-error)",
+                  background: "var(--bg-error)",
                   display: "flex",
                   alignItems: "center",
                   gap: "12px",
                 }}
               >
                 <AlertCircle size={20} color="var(--accent-rose)" />
-                <span style={{ color: "#fecdd3", fontSize: "0.9rem" }}>{askError}</span>
+                <span style={{ color: "var(--text-error)", fontSize: "0.9rem" }}>{askError}</span>
               </div>
             )}
 
@@ -670,7 +687,7 @@ export default function App() {
                   style={{
                     padding: "24px",
                     borderLeft: "4px solid var(--accent-cyan)",
-                    background: "rgba(15, 23, 42, 0.8)",
+                    background: "var(--bg-banner)",
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
@@ -707,7 +724,7 @@ export default function App() {
                     <button
                       onClick={() => handleCopy(askResult.generated_sparql)}
                       style={{
-                        background: "rgba(255, 255, 255, 0.05)",
+                        background: "var(--bg-subtle)",
                         border: "1px solid var(--border-color)",
                         padding: "6px 10px",
                         borderRadius: "var(--radius-sm)",
@@ -727,12 +744,12 @@ export default function App() {
                     style={{
                       fontFamily: "var(--font-mono)",
                       fontSize: "0.85rem",
-                      background: "rgba(10, 14, 23, 0.9)",
+                      background: "var(--bg-code)",
                       padding: "16px",
                       borderRadius: "var(--radius-md)",
                       overflowX: "auto",
-                      color: "#38bdf8",
-                      border: "1px solid rgba(255, 255, 255, 0.05)",
+                      color: "var(--text-code)",
+                      border: "1px solid var(--border-color)",
                     }}
                   >
                     {askResult.generated_sparql}
@@ -764,7 +781,7 @@ export default function App() {
                           )
                         }
                         style={{
-                          background: "rgba(255, 255, 255, 0.05)",
+                          background: "var(--bg-subtle)",
                           border: "1px solid var(--border-color)",
                           padding: "6px 12px",
                           borderRadius: "var(--radius-md)",
@@ -846,14 +863,7 @@ export default function App() {
                   <button
                     key={idx}
                     onClick={() => setSparqlQuery(sq.query)}
-                    style={{
-                      background: "rgba(99, 102, 241, 0.1)",
-                      border: "1px solid rgba(99, 102, 241, 0.25)",
-                      color: "#a5b4fc",
-                      padding: "6px 12px",
-                      borderRadius: "var(--radius-sm)",
-                      fontSize: "0.78rem",
-                    }}
+                    className="query-chip"
                   >
                     {sq.title}
                   </button>
@@ -869,12 +879,12 @@ export default function App() {
                   width: "100%",
                   fontFamily: "var(--font-mono)",
                   fontSize: "0.88rem",
-                  background: "rgba(10, 14, 23, 0.8)",
+                  background: "var(--bg-code-editor)",
                   border: "1px solid var(--border-color)",
                   borderRadius: "var(--radius-md)",
                   padding: "16px",
                   lineHeight: 1.5,
-                  color: "#e2e8f0",
+                  color: "var(--text-primary)",
                   marginBottom: "16px",
                 }}
               />
@@ -921,15 +931,15 @@ export default function App() {
                 className="glass-panel"
                 style={{
                   padding: "16px 20px",
-                  borderColor: "rgba(244, 63, 94, 0.4)",
-                  background: "rgba(244, 63, 94, 0.1)",
+                  borderColor: "var(--border-error)",
+                  background: "var(--bg-error)",
                   display: "flex",
                   alignItems: "center",
                   gap: "12px",
                 }}
               >
                 <AlertCircle size={20} color="var(--accent-rose)" />
-                <span style={{ color: "#fecdd3", fontSize: "0.9rem" }}>{queryError}</span>
+                <span style={{ color: "var(--text-error)", fontSize: "0.9rem" }}>{queryError}</span>
               </div>
             )}
 
@@ -954,7 +964,7 @@ export default function App() {
                   <button
                     onClick={() => exportCSV(queryResult.results, queryResult.columns)}
                     style={{
-                      background: "rgba(255, 255, 255, 0.05)",
+                      background: "var(--bg-subtle)",
                       border: "1px solid var(--border-color)",
                       padding: "6px 12px",
                       borderRadius: "var(--radius-md)",
@@ -1054,7 +1064,7 @@ export default function App() {
                         <div
                           key={c.iri}
                           style={{
-                            background: "rgba(15, 23, 42, 0.6)",
+                            background: "var(--bg-item)",
                             border: "1px solid var(--border-color)",
                             borderRadius: "var(--radius-md)",
                             padding: "16px",
@@ -1084,7 +1094,7 @@ export default function App() {
                         <div
                           key={p.iri}
                           style={{
-                            background: "rgba(15, 23, 42, 0.6)",
+                            background: "var(--bg-item)",
                             border: "1px solid var(--border-color)",
                             borderRadius: "var(--radius-md)",
                             padding: "16px",
@@ -1117,11 +1127,12 @@ export default function App() {
                   style={{
                     fontFamily: "var(--font-mono)",
                     fontSize: "0.85rem",
-                    background: "rgba(10, 14, 23, 0.9)",
+                    background: "var(--bg-code)",
                     padding: "20px",
                     borderRadius: "var(--radius-md)",
                     overflowX: "auto",
-                    color: "#94a3b8",
+                    color: "var(--text-secondary)",
+                    border: "1px solid var(--border-color)",
                   }}
                 >
                   {ontology?.ontology_ttl}
@@ -1158,7 +1169,7 @@ export default function App() {
                     <div
                       key={tname}
                       style={{
-                        background: "rgba(15, 23, 42, 0.6)",
+                        background: "var(--bg-item)",
                         border: "1px solid var(--border-color)",
                         borderRadius: "var(--radius-md)",
                         padding: "20px",
@@ -1173,7 +1184,7 @@ export default function App() {
                         }}
                       >
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                          <span style={{ fontWeight: 700, fontSize: "1.05rem", color: "#f8fafc" }}>{tname}</span>
+                          <span style={{ fontWeight: 700, fontSize: "1.05rem", color: "var(--text-primary)" }}>{tname}</span>
                           <span className="badge badge-emerald">PK: [{tdata.primary_key?.join(", ")}]</span>
                           {tdata.row_count !== null && (
                             <span className="badge badge-indigo">{tdata.row_count} rows</span>
@@ -1190,7 +1201,7 @@ export default function App() {
                             style={{
                               background: col.is_primary_key
                                 ? "rgba(16, 185, 129, 0.15)"
-                                : "rgba(255, 255, 255, 0.04)",
+                                : "var(--bg-subtle)",
                               border: col.is_primary_key
                                 ? "1px solid rgba(16, 185, 129, 0.3)"
                                 : "1px solid var(--border-color)",
@@ -1199,7 +1210,7 @@ export default function App() {
                               fontSize: "0.75rem",
                             }}
                           >
-                            <span style={{ fontWeight: 600, color: col.is_primary_key ? "#34d399" : "#e2e8f0" }}>
+                            <span style={{ fontWeight: 600, color: col.is_primary_key ? "var(--accent-emerald)" : "var(--text-primary)" }}>
                               {col.name}
                             </span>
                             <span style={{ color: "var(--text-muted)", marginLeft: "4px" }}>
@@ -1242,7 +1253,7 @@ export default function App() {
           alignItems: "center",
           fontSize: "0.75rem",
           color: "var(--text-muted)",
-          background: "rgba(10, 14, 23, 0.9)",
+          background: "var(--bg-footer)",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
