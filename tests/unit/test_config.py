@@ -11,6 +11,7 @@ def test_config_defaults():
     )
     assert settings.postgres_db == "test_db"
     assert settings.postgres_port == 5425
+    assert settings.ontop_port == 8825
     assert "postgresql+psycopg://" in settings.database_url
     assert "secret_password" not in settings.safe_database_url
     assert "***" in settings.safe_database_url

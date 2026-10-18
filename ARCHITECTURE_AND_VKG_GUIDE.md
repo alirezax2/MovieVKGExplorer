@@ -446,7 +446,7 @@ The entire stack is declared in [`docker-compose.yml`](file:///d:/mycodes/Antigr
 | :--- | :--- | :--- | :--- | :--- |
 | **`postgres`** | `movie-metadata-postgres` | `postgres:16.4-alpine` | `5425:5432` | Source of truth (1,000 movies, 14 classes, 50 subclasses) |
 | **`metabase`** | `movie-metadata-metabase` | `metabase/metabase:v0.50.23` | `3000:3000` | Relational SQL dashboards & BI analytics |
-| **`ontop`** | `movie-metadata-ontop` | `ontop/ontop:5.5.0` | `127.0.0.1:8080:8080` | SPARQL-to-SQL virtual knowledge graph engine |
+| **`ontop`** | `movie-metadata-ontop` | `ontop/ontop:5.5.0` | `127.0.0.1:8825:8080` | SPARQL-to-SQL virtual knowledge graph engine |
 | **`fastapi`** | `movie-metadata-fastapi` | Multi-stage Dockerfile (`uv`) | `127.0.0.1:8025:8025` | Secure REST API, AST validator, OmniRoute agent |
 | **`frontend`** | `movie-metadata-frontend` | `oven/bun:alpine` (Vite) | `5125:5125` | React explorer web interface |
 

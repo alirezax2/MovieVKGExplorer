@@ -24,8 +24,8 @@ class Settings(BaseSettings):
     postgres_password: str = Field(default="dev_ontop_ro_secret_password_2026", alias="POSTGRES_PASSWORD")
 
     # Ontop VKG endpoint
-    ontop_port: int = Field(default=8080, alias="ONTOP_PORT")
-    ontop_endpoint_url: str = Field(default="http://localhost:8080/sparql", alias="ONTOP_ENDPOINT_URL")
+    ontop_port: int = Field(default=8825, alias="ONTOP_PORT")
+    ontop_endpoint_url: str = Field(default="http://localhost:8825/sparql", alias="ONTOP_ENDPOINT_URL")
     vkg_base_iri: str = Field(default="https://example.org/movie-vkg/", alias="VKG_BASE_IRI")
 
     # OmniRoute LLM settings (supports both standard and user-specified ALPHIGMA_* names)

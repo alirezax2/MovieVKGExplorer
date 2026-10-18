@@ -599,7 +599,7 @@ In our stack ([`docker-compose.yml`](file:///d:/mycodes/Antigravity/Sona_knowled
       --properties=/opt/ontop/input/ontop.properties
       --portal=/opt/ontop/input/endpoint.toml
     ports:
-      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:8825:8080"
     volumes:
       - ./ontop/ontology.ttl:/opt/ontop/input/ontology.ttl:ro
       - ./ontop/mapping.obda:/opt/ontop/input/mapping.obda:ro
@@ -854,5 +854,5 @@ All services are running locally via Docker Compose. You can interact with and v
 
 - **Web Explorer UI:** Open [http://localhost:5125](http://localhost:5125) in your browser.
 - **FastAPI Interactive Swagger UI:** Open [http://127.0.0.1:8025/docs](http://127.0.0.1:8025/docs).
-- **Ontop SPARQL Portal:** Open [http://127.0.0.1:8080](http://127.0.0.1:8080).
+- **Ontop SPARQL Portal:** Open [http://127.0.0.1:8825](http://127.0.0.1:8825).
 - **Metabase BI Dashboards:** Open [http://localhost:3000](http://localhost:3000).

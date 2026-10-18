@@ -111,7 +111,7 @@ POSTGRES_DB=movies_db
 POSTGRES_USER=ontop_ro
 POSTGRES_PASSWORD=dev_ontop_ro_secret_password_2026
 
-ONTOP_ENDPOINT_URL=http://127.0.0.1:8080/sparql
+ONTOP_ENDPOINT_URL=http://127.0.0.1:8825/sparql
 API_KEY=dev_movie_vkg_secret_api_key_2026
 
 OMNIROUTE_BASE_URL=https://omniroute.alphigma.com/v1
@@ -149,7 +149,7 @@ docker compose up -d ontop
 Or start the Ontop container individually:
 ```bash
 docker run -d --name movie-metadata-ontop --network movie_metadata_network \
-  -p 127.0.0.1:8080:8080 \
+  -p 127.0.0.1:8825:8080 \
   -v "${PWD}/ontop:/opt/ontop/input:ro" \
   -v "${PWD}/ontop/jdbc:/opt/ontop/jdbc:ro" \
   -e ONTOP_ONTOLOGY_FILE=/opt/ontop/input/ontology.ttl \

@@ -70,7 +70,7 @@ export default function ArchitectureGuide({ isModal = false, onClose = () => {} 
       name: "3. Semantic & Virtual Engine Tier",
       icon: Network,
       color: "var(--accent-purple)",
-      badge: "Port 8080",
+      badge: "Port 8825",
       items: [
         "Ontop 5.5.0 Virtual Knowledge Graph Engine",
         "W3C OWL 2 QL Domain Ontology (ontology.ttl)",
@@ -140,7 +140,7 @@ export default function ArchitectureGuide({ isModal = false, onClose = () => {} 
     {
       title: "Ontop 5.5.0 VKG Engine",
       tech: "Java 17, Ontop SPARQL Endpoint",
-      port: "8080",
+      port: "8825",
       role: "SPARQL-to-SQL In-Memory Rewriter",
       description:
         "Compiles SPARQL queries on the fly into highly optimized SQL using self-join elimination, projection pruning, and join folding. Directly executes SQL against PostgreSQL over JDBC without intermediate RDF storage.",
