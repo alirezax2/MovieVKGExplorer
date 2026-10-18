@@ -18,7 +18,10 @@ import {
   RefreshCw,
   Sun,
   Moon,
+  BookOpen,
+  Layers,
 } from "lucide-react";
+import ArchitectureGuide from "./components/ArchitectureGuide";
 
 const DEFAULT_API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 const DEFAULT_API_KEY = "dev_movie_vkg_secret_api_key_2026";
@@ -96,6 +99,7 @@ export default function App() {
   const [apiUrl, setApiUrl] = useState(DEFAULT_API_URL);
   const [apiKey, setApiKey] = useState(DEFAULT_API_KEY);
   const [showKeyConfig, setShowKeyConfig] = useState(false);
+  const [showArchModal, setShowArchModal] = useState(false);
 
   // Theme state: dark | light (persisted in localStorage and system preference aware)
   const [theme, setTheme] = useState(() => {
@@ -379,6 +383,17 @@ export default function App() {
             </div>
           </button>
 
+          {/* Architecture & VKG Blueprint Guide Button */}
+          <button
+            onClick={() => setShowArchModal(true)}
+            className="arch-guide-btn"
+            title="System Architecture, Concepts & VKG Blueprint Guide"
+            aria-label="System Architecture, Concepts & VKG Blueprint Guide"
+          >
+            <BookOpen size={16} color="var(--accent-cyan)" />
+            <span>Architecture & Guide</span>
+          </button>
+
           <button
             onClick={() => setShowKeyConfig(!showKeyConfig)}
             className="glass-panel"
@@ -545,6 +560,24 @@ export default function App() {
         >
           <Database size={18} />
           <span>Relational Schema</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("architecture")}
+          style={{
+            padding: "14px 20px",
+            background: "transparent",
+            color: activeTab === "architecture" ? "var(--accent-rose)" : "var(--text-secondary)",
+            fontWeight: 600,
+            fontSize: "0.9rem",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            borderBottom: activeTab === "architecture" ? "2px solid var(--accent-rose)" : "2px solid transparent",
+          }}
+        >
+          <Layers size={18} />
+          <span>Architecture & Blueprint</span>
         </button>
       </div>
 
@@ -1241,7 +1274,19 @@ export default function App() {
             </div>
           </div>
         )}
+
+        {/* =================================================================== */}
+        {/* TAB 5: ARCHITECTURE & VKG BLUEPRINT */}
+        {/* =================================================================== */}
+        {activeTab === "architecture" && (
+          <ArchitectureGuide isModal={false} />
+        )}
       </main>
+
+      {/* Architecture & VKG Blueprint Modal */}
+      {showArchModal && (
+        <ArchitectureGuide isModal={true} onClose={() => setShowArchModal(false)} />
+      )}
 
       {/* Footer */}
       <footer

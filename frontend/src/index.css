@@ -391,3 +391,42 @@ input:focus, textarea:focus, select:focus {
   border-radius: 50%;
   animation: pulseGlow 2s infinite ease-in-out;
 }
+
+/* Architecture Guide Header Icon Button */
+.arch-guide-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(99, 102, 241, 0.15) 100%);
+  border: 1px solid var(--border-highlight);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.15);
+}
+
+.arch-guide-btn:hover {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.25) 0%, rgba(99, 102, 241, 0.3) 100%);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.35);
+  transform: translateY(-1px);
+}
+
+.arch-guide-btn:active {
+  transform: translateY(0);
+}
+
+[data-theme="light"] .arch-guide-btn {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(99, 102, 241, 0.12) 100%);
+  border-color: rgba(99, 102, 241, 0.3);
+  color: #1e1b4b;
+}
+
+[data-theme="light"] .arch-guide-btn:hover {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.18) 0%, rgba(99, 102, 241, 0.22) 100%);
+  border-color: var(--accent-indigo);
+}
