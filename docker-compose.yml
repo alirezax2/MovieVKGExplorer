@@ -122,7 +122,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
-      - "5125:5125"
+      - "${FRONTEND_PORT:-5125}:5125"
     environment:
       - VITE_API_URL=http://localhost:8025
     depends_on:
