@@ -22,7 +22,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -p 5425 -U ${POSTGRES_USER:-movie_admin} -d ${POSTGRES_DB:-movies_db}"]
+      test: [ "CMD-SHELL", "pg_isready -p 5425 -U ${POSTGRES_USER:-movie_admin} -d ${POSTGRES_DB:-movies_db}" ]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -45,7 +45,7 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || wget -q --spider http://localhost:3000/api/health || exit 1"]
+      test: [ "CMD-SHELL", "curl -f http://localhost:3000/api/health || wget -q --spider http://localhost:3000/api/health || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -72,12 +72,12 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8080' || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 20
-      start_period: 90s
+    # healthcheck:
+    #   test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8080' || exit 1"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 20
+    #   start_period: 90s
     networks:
       - movie_network
 
@@ -108,7 +108,7 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8025/health')"]
+      test: [ "CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8025/health')" ]
       interval: 10s
       timeout: 5s
       retries: 5
