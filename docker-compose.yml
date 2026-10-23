@@ -72,12 +72,12 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    # healthcheck:
-    #   test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8080' || exit 1"]
-    #   interval: 10s
-    #   timeout: 5s
-    #   retries: 20
-    #   start_period: 90s
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "127.0.0.1", "8080" ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 90s
     networks:
       - movie_network
 
@@ -104,7 +104,7 @@ services:
       ENVIRONMENT: production
     depends_on:
       ontop:
-        condition: service_healthy
+        condition: service_started
       postgres:
         condition: service_healthy
     healthcheck:
