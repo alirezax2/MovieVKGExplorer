@@ -167,11 +167,22 @@ export default function App() {
   const fetchHealthAndReady = async () => {
     try {
       const hRes = await fetch(`${apiUrl}/health`);
-      if (hRes.ok) setHealth(await hRes.json());
-      const rRes = await fetch(`${apiUrl}/ready`);
-      if (rRes.ok) setReady(await rRes.json());
+      if (hRes.ok) {
+        setHealth(await hRes.json());
+      } else {
+        setHealth({ status: "offline", database_connected: false, ontop_connected: false });
+      }
     } catch {
       setHealth({ status: "offline", database_connected: false, ontop_connected: false });
+    }
+
+    try {
+      const rRes = await fetch(`${apiUrl}/ready`);
+      if (rRes.ok) {
+        setReady(await rRes.json());
+      }
+    } catch {
+      // ready probe silent fallback
     }
   };
 
@@ -209,6 +220,8 @@ export default function App() {
 
   useEffect(() => {
     fetchHealthAndReady();
+    const interval = setInterval(fetchHealthAndReady, 8000);
+    return () => clearInterval(interval);
   }, [apiUrl]);
 
   // Load ontology when switching to ontology tab
